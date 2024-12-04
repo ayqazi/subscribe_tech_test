@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+load File.expand_path('../lib/boot.rb', __dir__)
+
+require 'receipt'
+
+Receipt.new
