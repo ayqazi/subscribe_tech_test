@@ -10,11 +10,11 @@ require 'basket_item'
 input = JSON.parse($stdin.read)
 
 basket_items = input.map do |item_data|
-  BasketItem.new(quantity: item_data['quantity'],
-                 name: item_data['name'],
-                 imported: item_data['imported'] == true,
-                 gross_unit_price_pence: (item_data['unitPrice'] * 100).round,
-                 category: item_data['category'])
+  BasketItem.new(quantity: item_data.fetch('quantity'),
+                 name: item_data.fetch('name'),
+                 imported: item_data.fetch('imported', false) == true,
+                 gross_unit_price_pence: (item_data.fetch('unitPrice') * 100).round,
+                 category: item_data.fetch('category', 'misc'))
 end
 
 basket = Basket.new(basket_items)
