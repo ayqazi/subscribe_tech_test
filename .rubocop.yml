@@ -18,3 +18,6 @@ Naming/HeredocDelimiterNaming:
 
 Style/Documentation:
   Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false

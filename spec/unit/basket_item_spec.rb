@@ -35,4 +35,21 @@ RSpec.describe BasketItem do
       expect(basket_item.imported).to be true
     end
   end
+
+  describe '#formatted_name' do
+    it 'is name for receipt for domestic items' do
+      expect(basket_item.formatted_name).to eq '2 TEST ITEM'
+    end
+
+    it 'is name for receipt for imported items' do
+      basket_item.imported = true
+      expect(basket_item.formatted_name).to eq '2 imported TEST ITEM'
+    end
+  end
+
+  describe '#amounts' do
+    it 'returns line price including tax and tax for all items' do
+      expect(basket_item.amounts).to eq [598, 0]
+    end
+  end
 end

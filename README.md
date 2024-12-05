@@ -2,6 +2,14 @@
 
 # Thoughts on decisions
 
+## Breaking the single responsibility principle
+
+Generating receipt text is technically not the Basket or BasketItem classes job. If we wanted to SRP to the extreme, we'd have a ReceiptLineGenerator and ReceiptGenerator which would take BasketItem or Basket respectively and generate the text.
+
+However, to be pragmatic, we include that functionality in the Basket classes since they are only one method and it makes things much simpler.
+
+But of course can move them out later during refactoring should things become more complex or we have to output different formats.
+
 ## Non-DRY tests
 
 Tests by their nature should be as simple as possible; the more complication there is in a test, the more chance of false positives now or in the future as the code evolves. So I personally prefer to keep tests on the repetitive side and not DRY too enthusiastically.
