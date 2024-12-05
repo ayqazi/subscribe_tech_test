@@ -62,9 +62,9 @@ As the input is JSON, I would have used a JSON schema to validate it. But as we 
 
 Generating receipt text is technically not the Basket or BasketItem classes job. If we wanted to SRP to the extreme, we'd have a ReceiptLineGenerator and ReceiptGenerator which would take BasketItem or Basket respectively and generate the text.
 
-However, to be pragmatic, we include that functionality in the Basket classes since they are only one method and it makes things much simpler.
+However, to be pragmatic, we include that functionality in the Basket classes since it makes things much simpler to navigate and read.
 
-But of course can move them out later during refactoring should things become more complex or we have to output different formats.
+But of course we can factor them out later should things become more complex or we have to output different formats.
 
 ## Non-DRY tests
 
@@ -77,8 +77,3 @@ This is also a useful "test smell" - if large swathes of code are repeated in a 
 I must point out that I believe common use cases, like testing an attr accessor exists, can certainly be tested using factored out helpers or custom matchers, as the overhead is worth the constant repetition across an entire codebase. As with all things, there is a balance between overhead and tidiness that must be found.
 
 Sometimes a test body is repeated for several tests, because the test is testing different behaviour. In those cases, I want the test descriptions to be like documentation and the bodies to be examples. Example: see Basket tests.
-
-# Desired enhancements
-
-* Validation of all inputs for BasketItem
-* JSON schema validation of script input
