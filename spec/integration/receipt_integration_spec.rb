@@ -80,4 +80,22 @@ RSpec.describe 'bin/receipt', 'integration' do
       Total: 98.38
     EOL
   end
+
+  it 'produces correct output for 1 domestic taxable item at 18.99', :aggregate_failures do
+    input = <<~JSON
+      [
+        {"quantity": 1, "name": "item", "unitPrice": 18.99}
+      ]
+    JSON
+
+    result = run(input)
+
+    expect(result[:status]).to be_a_success
+    expect(result[:err]).to be_empty
+    expect(result[:out]).to eq <<~EOL
+      1 item: 20.89
+      Sales Taxes: 1.90
+      Total: 20.89
+    EOL
+  end
 end

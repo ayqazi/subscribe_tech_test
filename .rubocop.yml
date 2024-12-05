@@ -21,3 +21,6 @@ Style/Documentation:
 
 Metrics/MethodLength:
   Enabled: false
+
+RSpec/SubjectStub:
+  Enabled: false
