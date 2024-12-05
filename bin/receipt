@@ -3,10 +3,6 @@
 
 load File.expand_path('../lib/boot.rb', __dir__)
 
-require 'receipt'
-
-Receipt.new
-
 input = $stdin.readlines.map(&:strip)
 
 case input[0]
