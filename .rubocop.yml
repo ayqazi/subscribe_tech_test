@@ -3,5 +3,15 @@ require: rubocop-rspec
 AllCops:
   NewCops: enable
 
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/integration/*.rb'
+
 RSpec/DescribeMethod:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
   Enabled: false

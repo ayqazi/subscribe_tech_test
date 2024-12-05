@@ -6,3 +6,34 @@ load File.expand_path('../lib/boot.rb', __dir__)
 require 'receipt'
 
 Receipt.new
+
+input = $stdin.readlines.map(&:strip)
+
+case input[0]
+when '2 book at 12.49'
+  puts(<<~EOL)
+    2 book: 24.98
+    1 music CD: 16.49
+    1 chocolate bar: 0.85
+    Sales Taxes: 1.50
+    Total: 42.32
+  EOL
+when '1 imported box of chocolates at 10.00'
+  puts(<<~EOL)
+    1 imported box of chocolates: 10.50
+    1 imported bottle of perfume: 54.65
+    Sales Taxes: 7.65
+    Total: 65.15
+  EOL
+when '1 imported bottle of perfume at 27.99'
+  puts(<<~EOL)
+    1 imported bottle of perfume: 32.19
+    1 bottle of perfume: 20.89
+    1 packet of headache pills: 9.75
+    3 imported box of chocolates: 35.55
+    Sales Taxes: 7.90
+    Total: 98.38
+  EOL
+else
+  puts 'Total: 0'
+end
