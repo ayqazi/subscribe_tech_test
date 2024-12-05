@@ -2,7 +2,9 @@
 
 require 'tax_calculation'
 
-BasketItem = Struct.new(:name, :quantity, :gross_unit_price_pence, :imported) do
+TAX_EXEMPT_CATEGORIES = Set['food', 'book', 'medical'].freeze
+
+BasketItem = Struct.new(:name, :quantity, :gross_unit_price_pence, :imported, :category) do
   include TaxCalculation
 
   def formatted_name
@@ -14,11 +16,10 @@ BasketItem = Struct.new(:name, :quantity, :gross_unit_price_pence, :imported) do
   end
 
   def amounts
-    line_price_pence = gross_unit_price_pence * quantity
-    tax = calculate_taxes(line_price_pence, imported, false)
+    unit_tax = calculate_taxes(gross_unit_price_pence, imported, TAX_EXEMPT_CATEGORIES.include?(category))
     [
-      line_price_pence + tax,
-      tax
+      (gross_unit_price_pence + unit_tax) * quantity,
+      unit_tax * quantity
     ]
   end
 end

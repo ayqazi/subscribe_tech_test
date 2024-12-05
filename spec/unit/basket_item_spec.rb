@@ -4,7 +4,7 @@ require 'basket_item'
 
 RSpec.describe BasketItem do
   subject(:basket_item) do
-    described_class.new name: 'TEST ITEM', quantity: 2, gross_unit_price_pence: 299, imported: false
+    described_class.new name: 'TEST ITEM', quantity: 2, gross_unit_price_pence: 299, imported: false, category: 'misc'
   end
 
   before do
@@ -17,6 +17,7 @@ RSpec.describe BasketItem do
       expect(basket_item.quantity).to eq 2
       expect(basket_item.gross_unit_price_pence).to eq 299
       expect(basket_item.imported).to be false
+      expect(basket_item.category).to be 'misc'
     end
 
     it 'can set and retrieve #name' do
@@ -38,6 +39,11 @@ RSpec.describe BasketItem do
       basket_item.imported = true
       expect(basket_item.imported).to be true
     end
+
+    it 'can set and retrieve #category' do
+      basket_item.category = 'book'
+      expect(basket_item.category).to eq 'book'
+    end
   end
 
   describe '#formatted_name' do
@@ -53,7 +59,7 @@ RSpec.describe BasketItem do
 
   describe '#amounts' do
     it 'returns line price including tax and the amount of tax charged' do
-      expect(basket_item.amounts).to eq [605, 7]
+      expect(basket_item.amounts).to eq [612, 14]
     end
 
     it 'uses SalesTaxCalculation#calculate_taxes' do
@@ -62,17 +68,32 @@ RSpec.describe BasketItem do
 
     it 'uses SalesTaxCalculation module to calculate sales tax for domestic items' do
       basket_item.amounts
-      expect(basket_item).to have_received(:calculate_taxes).with(598, false, nil).once
+      expect(basket_item).to have_received(:calculate_taxes).with(299, false, false).once
     end
 
     it 'uses SalesTaxCalculation module to calculate sales tax for imported items' do
       basket_item.imported = true
       basket_item.amounts
-      expect(basket_item).to have_received(:calculate_taxes).with(598, true, nil).once
+      expect(basket_item).to have_received(:calculate_taxes).with(299, true, false).once
     end
 
-    it 'uses SalesTaxCalculation module to calculate sales tax for non-taxable domestic items'
+    it 'uses SalesTaxCalculation module to calculate sales tax for non-taxable domestic items', :aggregate_failures do
+      %w[food book medical].each do |tax_exempt_category|
+        basket_item.category = tax_exempt_category
+        basket_item.amounts
+      end
 
-    it 'uses SalesTaxCalculation module to calculate sales tax for non-taxable imported items'
+      expect(basket_item).to have_received(:calculate_taxes).with(299, false, true).exactly(3).times
+    end
+
+    it 'uses SalesTaxCalculation module to calculate sales tax for non-taxable imported items', :aggregate_failures do
+      basket_item.imported = true
+      %w[food book medical].each do |tax_exempt_category|
+        basket_item.category = tax_exempt_category
+        basket_item.amounts
+      end
+
+      expect(basket_item).to have_received(:calculate_taxes).with(299, true, true).exactly(3).times
+    end
   end
 end

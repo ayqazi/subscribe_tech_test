@@ -18,9 +18,9 @@ RSpec.describe 'bin/receipt', 'integration' do
   it 'produces correct output for "Input 1"', :aggregate_failures do
     input = <<~JSON
       [
-        {"quantity": 2, "name": "book", "unitPrice": 12.49},
-        {"quantity": 1, "name": "music CD", "unitPrice": 14.99},
-        {"quantity": 1, "name": "chocolate bar", "unitPrice": 0.85}
+        {"quantity": 2, "name": "book", "category": "book", "unitPrice": 12.49},
+        {"quantity": 1, "name": "music CD", "category": "misc", "unitPrice": 14.99},
+        {"quantity": 1, "name": "chocolate bar", "category": "food", "unitPrice": 0.85}
       ]
     JSON
 
@@ -40,8 +40,8 @@ RSpec.describe 'bin/receipt', 'integration' do
   it 'produces correct output for "Input 2"', :aggregate_failures do
     input = <<~JSON
       [
-        {"quantity": 1, "name": "box of chocolates", "imported": true, "unitPrice": 10.00},
-        {"quantity": 1, "name": "bottle of perfume", "imported": true, "unitPrice": 47.50}
+        {"quantity": 1, "name": "box of chocolates", "category": "food", "imported": true, "unitPrice": 10.00},
+        {"quantity": 1, "name": "bottle of perfume", "category": "misc", "imported": true, "unitPrice": 47.50}
       ]
     JSON
 
@@ -60,10 +60,10 @@ RSpec.describe 'bin/receipt', 'integration' do
   it 'produces correct output for "Input 3"', :aggregate_failures do
     input = <<~JSON
       [
-        {"quantity": 1, "name": "bottle of perfume", "imported": true, "unitPrice": 27.99},
-        {"quantity": 1, "name": "bottle of perfume", "unitPrice": 18.99},
-        {"quantity": 1, "name": "packet of headache pills", "unitPrice": 9.75},
-        {"quantity": 3, "name": "boxes of chocolates", "imported": true, "unitPrice": 11.25}
+        {"quantity": 1, "name": "bottle of perfume", "category": "misc", "imported": true, "unitPrice": 27.99},
+        {"quantity": 1, "name": "bottle of perfume", "category": "misc", "unitPrice": 18.99},
+        {"quantity": 1, "name": "packet of headache pills", "category": "medical", "unitPrice": 9.75},
+        {"quantity": 3, "name": "box of chocolates",  "category": "food", "imported": true, "unitPrice": 11.25}
       ]
     JSON
 
@@ -81,10 +81,10 @@ RSpec.describe 'bin/receipt', 'integration' do
     EOL
   end
 
-  it 'produces correct output for 1 domestic taxable item at 18.99', :aggregate_failures do
+  it 'produces correct output for a domestic taxable item', :aggregate_failures do
     input = <<~JSON
       [
-        {"quantity": 1, "name": "item", "unitPrice": 18.99}
+        {"quantity": 1, "name": "item", "category": "misc", "unitPrice": 18.99}
       ]
     JSON
 
@@ -96,6 +96,24 @@ RSpec.describe 'bin/receipt', 'integration' do
       1 item: 20.89
       Sales Taxes: 1.90
       Total: 20.89
+    EOL
+  end
+
+  it 'produces correct output for a 3-pack of imported tax-exempt item', :aggregate_failures do
+    input = <<~JSON
+      [
+        {"quantity": 3, "name": "item",  "category": "food", "imported": true, "unitPrice": 11.25}
+      ]
+    JSON
+
+    result = run(input)
+
+    expect(result[:status]).to be_a_success
+    expect(result[:err]).to be_empty
+    expect(result[:out]).to eq <<~EOL
+      3 imported item: 35.55
+      Sales Taxes: 1.80
+      Total: 35.55
     EOL
   end
 end

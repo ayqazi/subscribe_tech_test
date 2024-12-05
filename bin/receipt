@@ -13,7 +13,8 @@ basket_items = input.map do |item_data|
   BasketItem.new(quantity: item_data['quantity'],
                  name: item_data['name'],
                  imported: item_data['imported'] == true,
-                 gross_unit_price_pence: (item_data['unitPrice'] * 100).round)
+                 gross_unit_price_pence: (item_data['unitPrice'] * 100).round,
+                 category: item_data['category'])
 end
 
 basket = Basket.new(basket_items)

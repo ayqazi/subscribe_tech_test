@@ -19,6 +19,6 @@ module TaxCalculation
   private
 
   def round_to_nearest_5p(value)
-    (value / 5).round * 5
+    (value / 5).ceil * 5
   end
 end
