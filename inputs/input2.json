@@ -1,0 +1,16 @@
+[
+  {
+    "quantity": 1,
+    "name": "box of chocolates",
+    "category": "food",
+    "imported": true,
+    "unitPrice": 10.00
+  },
+  {
+    "quantity": 1,
+    "name": "bottle of perfume",
+    "category": "misc",
+    "imported": true,
+    "unitPrice": 47.50
+  }
+]
