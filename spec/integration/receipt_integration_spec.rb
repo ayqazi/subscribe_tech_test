@@ -9,18 +9,20 @@ RSpec.describe 'bin/receipt', 'integration' do
   end
 
   it 'runs without errors', :aggregate_failures do
-    result = run('x')
+    result = run('[]')
     expect(result[:status]).to be_a_success
     expect(result[:out]).not_to be_empty
     expect(result[:err]).to be_empty
   end
 
   it 'produces correct output for "Input 1"', :aggregate_failures do
-    input = <<~EOL
-      2 book at 12.49
-      1 music CD at 14.99
-      1 chocolate bar at 0.85
-    EOL
+    input = <<~JSON
+      [
+        {"quantity": 2, "name": "book", "unitPrice": 12.49},
+        {"quantity": 1, "name": "music CD", "unitPrice": 14.99},
+        {"quantity": 1, "name": "chocolate bar", "unitPrice": 0.85}
+      ]
+    JSON
 
     result = run(input)
 
@@ -36,10 +38,12 @@ RSpec.describe 'bin/receipt', 'integration' do
   end
 
   it 'produces correct output for "Input 2"', :aggregate_failures do
-    input = <<~EOL
-      1 imported box of chocolates at 10.00
-      1 imported bottle of perfume at 47.50
-    EOL
+    input = <<~JSON
+      [
+        {"quantity": 1, "name": "box of chocolates", "imported": true, "unitPrice": 10.00},
+        {"quantity": 1, "name": "bottle of perfume", "imported": true, "unitPrice": 47.50}
+      ]
+    JSON
 
     result = run(input)
 
@@ -54,12 +58,14 @@ RSpec.describe 'bin/receipt', 'integration' do
   end
 
   it 'produces correct output for "Input 3"', :aggregate_failures do
-    input = <<~EOL
-      1 imported bottle of perfume at 27.99
-      1 bottle of perfume at 18.99
-      1 packet of headache pills at 9.75
-      3 imported boxes of chocolates at 11.25
-    EOL
+    input = <<~JSON
+      [
+        {"quantity": 1, "name": "bottle of perfume", "imported": true, "unitPrice": 27.99},
+        {"quantity": 1, "name": "bottle of perfume", "unitPrice": 18.99},
+        {"quantity": 1, "name": "packet of headache pills", "unitPrice": 9.75},
+        {"quantity": 3, "name": "boxes of chocolates", "imported": true, "unitPrice": 11.25}
+      ]
+    JSON
 
     result = run(input)
 
