@@ -1,5 +1,17 @@
 # SUBSCRIBE Tech Test
 
+This app takes a basket in the form of JSON piped to STDIN and calculates a receipt, including sales tax and total.
+
+JSON was chosen as input as it removed the need for fancy input handling to get the basket details.
+
+Each basket item contains a name, quantity, category, and gross unit price. There is also an imported flag. For an example, see the files in the `inputs` directory, like [inputs/input1.json](inputs/input1.json).
+
+"Category" is used to identify basic sales tax exemption status. "book", "food", or "medical" items are exempt from basic sales tax.
+
+When calculating tax for multiple quantities of an item, tax is calculated per item, rounded as per specified rules, and then multiplied by quantity.
+
+The `Basket` and `BasketItem` classes manage the basket content, and the `TaxCalculation` module centralizes the tax calculation. As specified below, a more granular class structure could have been adopted but was not due to concerns around simplicity and time limits.
+
 # Running
 
 Set up environment:
@@ -51,6 +63,8 @@ bundle exec bin/receipt < inputs/input3.json
 Sales Taxes: 7.90
 Total: 98.38
 ```
+
+Other inputs can provided by using those input files as a template and modifying them as desired.
 
 # Thoughts on decisions
 
